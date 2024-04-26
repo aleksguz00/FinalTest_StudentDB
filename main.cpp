@@ -6,25 +6,25 @@
 struct Student {
     size_t id_;
     std::string name_;
-    uint8_t age_;
+    size_t age_;
 
-    Student(size_t id, std::string_view name, uint8_t age)
+    Student(size_t id, std::string_view name, size_t age)
         : id_{ id }, name_{ name }, age_{ age } {}
 };
 
 class StudentDB {
 public:
-    void Add(int id, const std::string_view name, int age) {
+    void Add(size_t id, const std::string_view name, size_t age) {
         students.push_back(std::make_shared<Student>(id, name, age));
     }
 
-    void Delete(int id) {
+    void Delete(size_t id) {
         students.erase(std::remove_if(students.begin(), students.end(), [id](const auto& student) {
             return student->id_ == id;
         }), students.end());
     }
 
-    std::shared_ptr<Student> Get(int id) {
+    std::shared_ptr<Student> Get(size_t id) {
         auto it{ std::find_if(students.begin(), students.end(), [id](const auto& student) {
             return student->id_ == id;
         })};
@@ -58,7 +58,7 @@ int main() {
 
     db.PrintAllNames();
 
-    std::shared_ptr<Student> student = db.Get(2);
+    std::shared_ptr<Student> student = db.Get(3);
 
     if (student) {
         std::cout << "ID: " << student->id_ << std::endl;
