@@ -18,10 +18,18 @@ public:
         students.push_back(std::make_shared<Student>(id, name, age));
     }
 
+    // В методах delete и get использую STL алгоритмы условного удаления и условного поиска
+    // Если элемента с заданным ID нет - программы не упадёт, просто вывожу сообщение об этом
     void Delete(size_t id) {
-        students.erase(std::remove_if(students.begin(), students.end(), [id](const auto& student) {
+        auto result = std::remove_if(students.begin(), students.end(), [id](const auto& student) {
             return student->id_ == id;
-        }), students.end());
+        });
+
+        if (result == students.end()) {
+            std::cout << "There is no such student\n";
+        } else {
+            students.erase(result, students.end());
+        }
     }
 
     std::shared_ptr<Student> Get(size_t id) {
@@ -37,6 +45,8 @@ public:
         }
     }
 
+    // В задаче не требовался, написал просто как отладочный метод, чтобы проверить,
+    // что остальные методы работают
     void PrintAllNames() {
         for (auto student : students) {
             std::cout << student->name_ << " ";
@@ -58,7 +68,7 @@ int main() {
 
     db.PrintAllNames();
 
-    std::shared_ptr<Student> student = db.Get(3);
+    std::shared_ptr<Student> student = db.Get(2);
 
     if (student) {
         std::cout << "ID: " << student->id_ << std::endl;
@@ -69,7 +79,7 @@ int main() {
         std::cout << "Error\n";
     }
 
-    db.Delete(1);
+    db.Delete(5);
 
     db.PrintAllNames();
 }
